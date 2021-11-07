@@ -21,7 +21,7 @@ func main() {
 		fmt.Printf("Error: %v", err.Error())
 	}
 
-	convertedData, err := conv.ConvertData(count, consoleArgs[2], consoleArgs[3])
+	convertedData, err := conv.ConvertData(count, consoleArgs[3], consoleArgs[2])
 	if err != nil {
 		fmt.Printf("Error: %v", err.Error())
 	}

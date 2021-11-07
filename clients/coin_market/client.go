@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	coinMarketToken = "9df3973d-c048-462d-8994-386cd966502f"
+	coinMarketToken = ""
 	getPriceUrl     = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
 )
 
