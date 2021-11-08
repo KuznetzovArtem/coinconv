@@ -1,6 +1,7 @@
 package coin_market
 
 import (
+	"errors"
 	"github.com/buger/jsonparser"
 	"net/url"
 )
@@ -28,6 +29,13 @@ func (c *CoinMarket) GetCryptoPrice(crypt, fiat string) (float64, error) {
 	response, err := coinClient.Do()
 	if err != nil {
 		return 0, err
+	}
+	errMsg, dataType, _, err := jsonparser.Get(response, "status", "error_message")
+	switch {
+	case err != nil:
+		return 0, err
+	case dataType != jsonparser.Null:
+		return 0, errors.New(string(errMsg))
 	}
 
 	price, err := jsonparser.GetFloat(response, "data", crypt, "quote", fiat, "price")
