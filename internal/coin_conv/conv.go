@@ -1,24 +1,27 @@
 package coin_conv
 
-import "errors"
+import (
+	"coinconv/internal"
+	"errors"
+)
 
 type CoinConv struct {
-	Market Market
-}
-
-type Market interface {
-	GetCryptoPrice(crypt, fiat string) (float64, error)
+	Market internal.Client
 }
 
 var errIncorrectPrice = errors.New("got incorrect price from market place")
 
-func NewCoinConv(market Market) CoinConv {
+func NewCoinConv(market internal.Client) internal.Converter {
 	return CoinConv{
 		market,
 	}
 }
 
 func (c CoinConv) ConvertData(count float64, cryptCur, fiatCur string) (float64, error) {
+	if count == 0 {
+		return 0, nil
+	}
+
 	price, err := c.Market.GetCryptoPrice(cryptCur, fiatCur)
 	if err != nil {
 		return 0, err

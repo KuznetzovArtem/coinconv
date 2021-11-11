@@ -9,6 +9,7 @@ import (
 const (
 	coinMarketToken = "9df3973d-c048-462d-8994-386cd966502f"
 	getPriceUrl     = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+	tokenHeader     = "X-CMC_PRO_API_KEY"
 )
 
 type CoinClient struct {
@@ -16,13 +17,7 @@ type CoinClient struct {
 	r          *http.Request
 }
 
-type Client interface {
-	AddRequestHeader(key, value string)
-	SetQueryValues(q url.Values)
-	Do() ([]byte, error)
-}
-
-func NewClient(method, url string) (Client, error) {
+func NewClient(method, url string) (*CoinClient, error) {
 	request, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return nil, err
@@ -57,7 +52,7 @@ func (c *CoinClient) Do() ([]byte, error) {
 	return respBody, nil
 }
 
-func NewCryptoPriceClient() (Client, error) {
+func NewCryptoPriceClient() (*CoinClient, error) {
 	coinClient, err := NewClient(
 		http.MethodGet,
 		getPriceUrl,
@@ -66,6 +61,6 @@ func NewCryptoPriceClient() (Client, error) {
 		return nil, err
 	}
 	coinClient.AddRequestHeader("Accepts", "application/json")
-	coinClient.AddRequestHeader("X-CMC_PRO_API_KEY", coinMarketToken)
+	coinClient.AddRequestHeader(tokenHeader, coinMarketToken)
 	return coinClient, nil
 }

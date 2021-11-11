@@ -2,22 +2,27 @@ package coin_market
 
 import (
 	"errors"
-	"github.com/buger/jsonparser"
 	"net/url"
+
+	"github.com/buger/jsonparser"
 )
 
 type CoinMarket struct {
-	fnCryptoPriceClient func() (Client, error)
+	coinClient *CoinClient
 }
 
-func NewCoinMarket() CoinMarket {
-	return CoinMarket{
-		fnCryptoPriceClient: NewCryptoPriceClient,
+func NewCoinMarket() (*CoinMarket, error) {
+	coinClient, err := NewCryptoPriceClient()
+	if err != nil {
+		return nil, err
 	}
+	return &CoinMarket{
+		coinClient: coinClient,
+	}, nil
 }
 
 func (c *CoinMarket) GetCryptoPrice(crypt, fiat string) (float64, error) {
-	coinClient, err := c.fnCryptoPriceClient()
+	coinClient, err := NewCryptoPriceClient()
 	if err != nil {
 		return 0, err
 	}
